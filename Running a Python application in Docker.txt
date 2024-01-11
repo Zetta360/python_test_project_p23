@@ -1,0 +1,38 @@
+RUNNING A PYTHON APPLICATION IN DOCKER
+
+0. Prerequisites:
+Download Docker Desktop from https://www.docker.com/ and install. If installing on Windows, it may require enabling some Windows features.
+
+1. Create a Docker file (a file named Dockerfile, with no extension) with the following contents:
+
+FROM python:latest
+WORKDIR /usr/src/myapp
+COPY myapp.py .
+CMD ["python", "myapp.py"]
+
+2. Explanations:
+- [FROM python:latest]
+The first line states the base image that we are working with. It is essentially a Linux distribution on top of which the Python interpreter has been added.
+- [WORKDIR /usr/src/myapp]
+We create a new folder in the file system. This is where we place the Python` source code.
+- [COPY myapp.py .]
+We copy the source code - the file called myapp.py - into the current folder. The current folder is /usr/src/myapp and has been set at the previous step.
+CMD ["python", "myapp.py"]
+The Python interpreter is invoked with the file containing the program. The output is displayed on screen.
+
+3. Build our custom Docker image:
+> docker build -t vbocan/my-python-app .
+The Docker system builds the image following the instructions set in the Dockerfile. The -t option assigns a tag to the image, in this case it is vbocan/my-python-app. You will need to change this for your particular case.
+
+4. Instantiate the image and run the application in a container
+> docker run --rm --name my-running-app vbocan/my-python-app
+You should see the result of the program being written on the screen. The --rm option destroys the container as soon as it has finished running, otherwise you'd need to change the name of the container each time you run it.
+
+5. Publish image to Docker Hub (optional):
+The image may be published to your Docker Hub account. You need a free account with Docker Hub, then login using
+> docker login -u <username>
+Finally, push the image to Docker Hub
+> docker push vbocan/my-python-app
+
+Once published, the image is visibile to the world (provided that you make it public, private being the default) and anyone could execute it on their own machine.
+That is the beauty of Docker deployment! Enjoy!
